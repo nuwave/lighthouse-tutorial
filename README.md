@@ -8,7 +8,6 @@
 
 # Lighthouse Tutorial
 
-</div>
+**This is the resulting source code of following the [Lighthouse Tutorial](https://lighthouse-php.com/tutorial).**
 
-This is the resulting source code of following the [Lighthouse Tutorial](https://lighthouse-php.com/tutorial).
-Only minimal changes were made to a default Laravel install.
+</div>
