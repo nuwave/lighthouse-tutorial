@@ -1,9 +1,14 @@
+<div align="center">
+  <a href="https://lighthouse-php.com/tutorial">
+    <img src="https://raw.githubusercontent.com/nuwave/lighthouse/master/logo.png" alt=lighthouse-logo" width="150" height="150">
+  </a>
+</div>
+
+<div align="center">
+
 # Lighthouse Tutorial
 
-<img src="https://raw.githubusercontent.com/nuwave/lighthouse/master/logo.png" width="150" height="150">
+</div>
 
-This is a simple GraphQL API built with [Lighthouse - GraphQL Server for Laravel](https://github.com/nuwave/lighthouse).
-
-
-
-Lighthouse is a PHP package that allows you to serve a GraphQL endpoint from your Laravel application. It greatly reduces the boilerplate required to create a schema, it integrates well with any Laravel project, and it's highly customizable giving you full control over your data.
+This is the resulting source code of following the [Lighthouse Tutorial](https://lighthouse-php.com/tutorial).
+Only minimal changes were made to a default Laravel install.
