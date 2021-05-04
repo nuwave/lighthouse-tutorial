@@ -19,16 +19,6 @@ services:
             - sail
         depends_on:
             - mysql
-            - redis
-            # - selenium
-    # selenium:
-    #     image: 'selenium/standalone-chrome'
-    #     volumes:
-    #         - '/dev/shm:/dev/shm'
-    #     networks:
-    #         - sail
-    #     depends_on:
-    #         - laravel.test
     mysql:
         image: 'mysql:8.0'
         ports:
@@ -43,32 +33,11 @@ services:
             - 'sailmysql:/var/lib/mysql'
         networks:
             - sail
-    redis:
-        image: 'redis:alpine'
-        ports:
-            - '${FORWARD_REDIS_PORT:-6379}:6379'
-        volumes:
-            - 'sailredis:/data'
-        networks:
-            - sail
-    # memcached:
-    #     image: 'memcached:alpine'
-    #     ports:
-    #         - '11211:11211'
-    #     networks:
-    #         - sail
-    mailhog:
-        image: 'mailhog/mailhog:latest'
-        ports:
-            - 1025:1025
-            - 8025:8025
-        networks:
-            - sail
+        healthcheck:
+          test: ["CMD", "mysqladmin", "ping"]
 networks:
     sail:
         driver: bridge
 volumes:
     sailmysql:
-        driver: local
-    sailredis:
         driver: local
