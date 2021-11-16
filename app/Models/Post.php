@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Post extends Model
 {
     use HasFactory;
-    
+
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
