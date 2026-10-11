@@ -17,20 +17,28 @@ class PostMutationTest extends TestCase
     {
         $author = User::factory()->create();
 
-        $this->graphQL(/** @lang GraphQL */ '
-mutation ($authorId: ID!) {
-  createPost(input: { title: "Hello", content: "World", author: { connect: $authorId } }) {
-    title
-    author {
-      id
-    }
-  }
-}
-        ', ['authorId' => $author->id])->assertExactJson([
+        $this->graphQL(/* @lang GraphQL */ '
+        mutation ($authorId: ID!) {
+            createPost(input: {
+                title: "Hello"
+                content: "World"
+                author: { connect: $authorId }
+            }) {
+                title
+                author {
+                    id
+                }
+            }
+        }
+        ', [
+            'authorId' => $author->id,
+        ])->assertExactJson([
             'data' => [
                 'createPost' => [
                     'title' => 'Hello',
-                    'author' => ['id' => (string) $author->id],
+                    'author' => [
+                        'id' => (string) $author->id,
+                    ],
                 ],
             ],
         ]);
@@ -41,20 +49,29 @@ mutation ($authorId: ID!) {
         $post = Post::factory()->create();
         $newAuthor = User::factory()->create();
 
-        $this->graphQL(/** @lang GraphQL */ '
-mutation ($id: ID!, $authorId: ID!) {
-  updatePost(input: { id: $id, title: "Changed", author: { connect: $authorId } }) {
-    title
-    author {
-      id
-    }
-  }
-}
-        ', ['id' => $post->id, 'authorId' => $newAuthor->id])->assertExactJson([
+        $this->graphQL(/* @lang GraphQL */ '
+        mutation ($id: ID!, $authorId: ID!) {
+            updatePost(input: {
+                id: $id
+                title: "Changed"
+                author: { connect: $authorId }
+            }) {
+                title
+                author {
+                    id
+                }
+            }
+        }
+        ', [
+            'id' => $post->id,
+            'authorId' => $newAuthor->id,
+        ])->assertExactJson([
             'data' => [
                 'updatePost' => [
                     'title' => 'Changed',
-                    'author' => ['id' => (string) $newAuthor->id],
+                    'author' => [
+                        'id' => (string) $newAuthor->id,
+                    ],
                 ],
             ],
         ]);
@@ -64,14 +81,20 @@ mutation ($id: ID!, $authorId: ID!) {
     {
         $post = Post::factory()->create();
 
-        $this->graphQL(/** @lang GraphQL */ '
-mutation ($id: ID!) {
-  deletePost(id: $id) {
-    id
-  }
-}
-        ', ['id' => $post->id])->assertExactJson([
-            'data' => ['deletePost' => ['id' => (string) $post->id]],
+        $this->graphQL(/* @lang GraphQL */ '
+        mutation ($id: ID!) {
+            deletePost(id: $id) {
+                id
+            }
+        }
+        ', [
+            'id' => $post->id,
+        ])->assertExactJson([
+            'data' => [
+                'deletePost' => [
+                    'id' => (string) $post->id,
+                ],
+            ],
         ]);
 
         $this->assertModelMissing($post);
