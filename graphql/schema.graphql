@@ -15,9 +15,30 @@ type Query {
 }
 
 type Mutation {
-    createPost(author_id: ID!, title: String!, content: String!): Post @create
-    updatePost(id: ID!, title: String, content: String): Post @update
-    deletePost(id: ID!): Post @delete
+    createPost(input: CreatePostInput! @spread): Post! @create
+    updatePost(input: UpdatePostInput! @spread): Post! @update
+    deletePost(id: ID! @whereKey): Post @delete
+}
+
+input CreatePostInput {
+    title: String!
+    content: String!
+    author: CreateUserBelongsTo!
+}
+
+input CreateUserBelongsTo {
+    connect: ID!
+}
+
+input UpdatePostInput {
+    id: ID!
+    title: String
+    content: String
+    author: UpdateUserBelongsTo
+}
+
+input UpdateUserBelongsTo {
+    connect: ID!
 }
 
 type User {

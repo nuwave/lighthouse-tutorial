@@ -18,15 +18,15 @@ class PostMutationTest extends TestCase
         $author = User::factory()->create();
 
         $this->graphQL(/** @lang GraphQL */ '
-        mutation ($authorId: ID!) {
-            createPost(author_id: $authorId, title: "Hello", content: "World") {
-                title
-                author {
-                    id
-                }
-            }
-        }
-        ', ['authorId' => $author->id])->assertJson([
+mutation ($authorId: ID!) {
+  createPost(input: { title: "Hello", content: "World", author: { connect: $authorId } }) {
+    title
+    author {
+      id
+    }
+  }
+}
+        ', ['authorId' => $author->id])->assertExactJson([
             'data' => [
                 'createPost' => [
                     'title' => 'Hello',
@@ -34,25 +34,30 @@ class PostMutationTest extends TestCase
                 ],
             ],
         ]);
-
-        $this->assertDatabaseHas('posts', ['title' => 'Hello', 'author_id' => $author->id]);
     }
 
     public function testUpdatePost(): void
     {
         $post = Post::factory()->create();
+        $newAuthor = User::factory()->create();
 
         $this->graphQL(/** @lang GraphQL */ '
-        mutation ($id: ID!) {
-            updatePost(id: $id, title: "Changed") {
-                title
-            }
-        }
-        ', ['id' => $post->id])->assertJson([
-            'data' => ['updatePost' => ['title' => 'Changed']],
+mutation ($id: ID!, $authorId: ID!) {
+  updatePost(input: { id: $id, title: "Changed", author: { connect: $authorId } }) {
+    title
+    author {
+      id
+    }
+  }
+}
+        ', ['id' => $post->id, 'authorId' => $newAuthor->id])->assertExactJson([
+            'data' => [
+                'updatePost' => [
+                    'title' => 'Changed',
+                    'author' => ['id' => (string) $newAuthor->id],
+                ],
+            ],
         ]);
-
-        $this->assertDatabaseHas('posts', ['id' => $post->id, 'title' => 'Changed']);
     }
 
     public function testDeletePost(): void
@@ -60,15 +65,15 @@ class PostMutationTest extends TestCase
         $post = Post::factory()->create();
 
         $this->graphQL(/** @lang GraphQL */ '
-        mutation ($id: ID!) {
-            deletePost(id: $id) {
-                id
-            }
-        }
-        ', ['id' => $post->id])->assertJson([
+mutation ($id: ID!) {
+  deletePost(id: $id) {
+    id
+  }
+}
+        ', ['id' => $post->id])->assertExactJson([
             'data' => ['deletePost' => ['id' => (string) $post->id]],
         ]);
 
-        $this->assertDatabaseMissing('posts', ['id' => $post->id]);
+        $this->assertModelMissing($post);
     }
 }
